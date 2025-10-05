@@ -8,7 +8,8 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import accuracy_score, prescision_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, f1_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 #1 - Data Processing
 df = pd.read_csv("Data/Project 1 Data.csv")
@@ -63,15 +64,25 @@ randomsearch_rf = RandomizedSearchCV(rf_pipe, rf_params, cv=5, n_iter=15, random
 
 randomsearch_rf.fit(X_train, y_train)
 best_models["RandomForest"] = randomsearch_rf.best_estimator_
-print("\nLogistic Regression best params:", randomsearch_rf.best_params_)
+print("\nRandom Forest best params:", randomsearch_rf.best_params_)
 
 #5 - Model Evaluation
 for name, model in best_models.items():
     model.fit(X_train, y_train)
-    y_pred=model.predict(X_test)
+    y_pred = model.predict(X_test)
     
-    acc=accuracy_score(y_test, y_pred)
-    prec=precision_score(y_test, y_pred, average="weighted")
+    acc = accuracy_score(y_test, y_pred)
+    prec = precision_score(y_test, y_pred, average="weighted")
+    f1 = f1_score(y_test, y_pred, average="weighted")
+    
+    print(f"\n{name} Performance:")
+    print(f"Accuracy: {acc:.3f}, Precision: {prec:.3f}, F1 Score: {f1:.3f}")
+    
+plt.figure(figsize=(6,5))
+cm = confusion_matrix(y_test, y_pred)
+plt.title("Confusion matrix")
+plt.show()
+    
     
     
 

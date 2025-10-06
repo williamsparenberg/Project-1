@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSe
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, precision_score, f1_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
@@ -81,11 +82,19 @@ grid_lr.fit(X_train, y_train)
 best_models["LogisticRegression"] = grid_lr.best_estimator_
 print("\nLogistic Regression best params:", grid_lr.best_params_)
 
+#Decision Tree Pipeline
+dt_pipe = Pipeline([('scaler', StandardScaler()), ('dt', DecisionTreeClassifier(random_state=42))])
+dt_params = {'dt__max_depth': [None, 5, 10, 20, 50], 'dt__min_samples_split': [2, 5, 10, 20], 'dt__criterion': ['gini', 'entropy']}
+
+grid_dt = GridSearchCV(dt_pipe, dt_params, cv=5)
+grid_dt.fit(X_train, y_train) 
+best_models["DecisionTree"] = grid_dt.best_estimator_
+print("\nDecision Tree best params:", grid_dt.best_params_)
+
 #Random Forest Pipeline with RandomSearchCV
 rf_pipe = Pipeline([('scaler', StandardScaler()),('rf', RandomForestClassifier(random_state=42))])
 rf_params = {'rf__n_estimators':[10, 50, 100, 200], 'rf__max_depth':[None, 5, 10, 15]}
 randomsearch_rf = RandomizedSearchCV(rf_pipe, rf_params, cv=5, n_iter=15, random_state=42)
-
 
 randomsearch_rf.fit(X_train, y_train)
 best_models["RandomForest"] = randomsearch_rf.best_estimator_
@@ -117,6 +126,14 @@ cm = confusion_matrix(y_test, y_pred_lr)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
 plt.title("Logistic Regression Confusion Matrix")
+plt.show()
+
+#Decision Tree Confusion Matrix
+y_pred_dt = best_models["DecisionTree"].predict(X_test)
+cm = confusion_matrix(y_test, y_pred_dt)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.title("Decision Tree Confusion Matrix")
 plt.show()
 
 #Random Forest Confusion Matrix

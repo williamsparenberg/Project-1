@@ -19,14 +19,38 @@ df = pd.read_csv("Data/Project 1 Data.csv")
 X = df[['X','Y','Z']]
 y = df['Step']
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.2, random_state=42)
-
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
+#Histogram
 desc_stat = df[['X', 'Y', 'Z',]].describe()
 desc_stat_step = df['Step'].value_counts().sort_index()
 df.hist()
+
+#Box Plot for X
+plt.figure(figsize=(7, 5))
+sns.boxplot(x='Step', y='X', data=df)
+plt.title('Box Plot of X by Step')
+plt.xlabel('Step')
+plt.ylabel('X')
+plt.show()
+
+#Box Plot for Y
+plt.figure(figsize=(7, 5))
+sns.boxplot(x='Step', y='Y', data=df)
+plt.title('Box Plot of Y by Step')
+plt.xlabel('Step')
+plt.ylabel('Y')
+plt.show()
+
+#Box Plot for Z
+plt.figure(figsize=(7, 5))
+sns.boxplot(x='Step', y='Z', data=df)
+plt.title('Box Plot of Z by Step')
+plt.xlabel('Step')
+plt.ylabel('Z')
+plt.show()
 
 #3 - Data correlation
 corr = df[['X','Y','Z']].corr()
@@ -131,4 +155,3 @@ predict_results = model.predict(newdata)
 
 print("\nClassifications of New Data:")
 print(predict_results)
-

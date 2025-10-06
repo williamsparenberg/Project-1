@@ -10,6 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, precision_score, f1_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import joblib
 
 #1 - Data Processing
 df = pd.read_csv("Data/Project 1 Data.csv")
@@ -103,7 +104,8 @@ plt.title("Random Forest Confusion Matrix")
 plt.show()
 
 #6 - Stacking Model
-estimators= [('svm_pipe', svm_pipe), ('lr_pipe', lr_pipe)]
+#RandomForest and Logistic Regression were chosen to stack
+estimators= [('rf_pipe', svm_pipe), ('lr_pipe', lr_pipe)]
 stacking_model= StackingClassifier(estimators=estimators, cv=5)
 stacking_model.fit(X_train, y_train)
 y_pred_stacking = stacking_model.predict(X_test)
@@ -121,5 +123,12 @@ disp.plot()
 plt.title("Stacking Model Confusion Matrix")
 plt.show()    
 
-    
+#7 - Model Evaluation
+joblib.dump(stacking_model, "stacking_model.joblib")
+model = joblib.load("stacking_model.joblib")
+newdata = pd.DataFrame([[9.375,3.0625,1.51], [6.995,5.125,0.3875], [0,3.0625,1.93], [9.4,3,1.8], [9.4,3,1.3]], columns = ["X", "Y", "Z"])
+predict_results = model.predict(newdata)
+
+print("\nClassifications of New Data:")
+print(predict_results)
 

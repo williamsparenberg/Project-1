@@ -77,12 +77,30 @@ for name, model in best_models.items():
     
     print(f"\n{name} Performance:")
     print(f"Accuracy: {acc:.3f}, Precision: {prec:.3f}, F1 Score: {f1:.3f}")
-    
-plt.figure(figsize=(6,5))
-cm = confusion_matrix(y_test, y_pred)
-plt.title("Confusion matrix")
+
+#SVM Confusion Matrix
+y_pred_svm = best_models["SVM"].predict(X_test)
+cm = confusion_matrix(y_test, y_pred_svm)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.title("SVM Confusion Matrix")
 plt.show()
-    
+
+#Logistic Regression Confusion Matrix
+y_pred_lr = best_models["LogisticRegression"].predict(X_test)
+cm = confusion_matrix(y_test, y_pred_lr)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.title("Logistic Regression Confusion Matrix")
+plt.show()
+
+#Random Forest Confusion Matrix
+y_pred_rf = best_models["RandomForest"].predict(X_test)
+cm = confusion_matrix(y_test, y_pred_rf)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.title("Random Forest Confusion Matrix")
+plt.show()    
     
     
 

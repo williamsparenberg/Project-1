@@ -100,7 +100,26 @@ cm = confusion_matrix(y_test, y_pred_rf)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
 plt.title("Random Forest Confusion Matrix")
+plt.show()
+
+#6 - Stacking Model
+estimators= [('svm_pipe', svm_pipe), ('lr_pipe', lr_pipe)]
+stacking_model= StackingClassifier(estimators=estimators, cv=5)
+stacking_model.fit(X_train, y_train)
+y_pred_stacking = stacking_model.predict(X_test)
+
+acc_s = accuracy_score(y_test, y_pred_stacking)
+prec_s = precision_score(y_test, y_pred_stacking, average="weighted")
+f1_s = f1_score(y_test, y_pred_stacking, average="weighted")
+
+print("\nStacking Model Performance:")
+print(f"\nAccuracy: {acc_s:.3f}, Precision: {prec_s:.3f}, F1 Score: {f1_s:.3f}")
+  
+cm = confusion_matrix(y_test, y_pred_stacking)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.title("Stacking Model Confusion Matrix")
 plt.show()    
-    
+
     
 

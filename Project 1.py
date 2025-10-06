@@ -29,7 +29,7 @@ desc_stat_step = df['Step'].value_counts().sort_index()
 df.hist()
 
 #Box Plot for X
-plt.figure(figsize=(7, 5))
+plt.figure()
 sns.boxplot(x='Step', y='X', data=df)
 plt.title('Box Plot of X by Step')
 plt.xlabel('Step')
@@ -37,7 +37,7 @@ plt.ylabel('X')
 plt.show()
 
 #Box Plot for Y
-plt.figure(figsize=(7, 5))
+plt.figure()
 sns.boxplot(x='Step', y='Y', data=df)
 plt.title('Box Plot of Y by Step')
 plt.xlabel('Step')
@@ -45,7 +45,7 @@ plt.ylabel('Y')
 plt.show()
 
 #Box Plot for Z
-plt.figure(figsize=(7, 5))
+plt.figure()
 sns.boxplot(x='Step', y='Z', data=df)
 plt.title('Box Plot of Z by Step')
 plt.xlabel('Step')
@@ -54,7 +54,7 @@ plt.show()
 
 #3 - Data correlation
 corr = df[['X','Y','Z']].corr()
-plt.figure(figsize=(6,5))
+plt.figure()
 sns.heatmap(corr, annot=True, fmt=".2f")
 plt.title("Feature Correlation Heatmap")
 plt.show()
@@ -134,6 +134,7 @@ stacking_model= StackingClassifier(estimators=estimators, cv=5)
 stacking_model.fit(X_train, y_train)
 y_pred_stacking = stacking_model.predict(X_test)
 
+#Predicition scoring for stacking matrix
 acc_s = accuracy_score(y_test, y_pred_stacking)
 prec_s = precision_score(y_test, y_pred_stacking, average="weighted")
 f1_s = f1_score(y_test, y_pred_stacking, average="weighted")
@@ -141,6 +142,7 @@ f1_s = f1_score(y_test, y_pred_stacking, average="weighted")
 print("\nStacking Model Performance:")
 print(f"\nAccuracy: {acc_s:.3f}, Precision: {prec_s:.3f}, F1 Score: {f1_s:.3f}")
   
+#Stacking Model Confusion matrix
 cm = confusion_matrix(y_test, y_pred_stacking)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm)
 disp.plot()
